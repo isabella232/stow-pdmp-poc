@@ -1,19 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import './shim.js'
-import crypto from 'crypto';
-
-global.crypto = crypto;
-
-import Linnia from '@linniaprotocol/linnia-js'
+import './shim.js';
+import stowClient from './services/stow';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -24,13 +12,22 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  state = {
+    record: {}
+  };
+
+  componentDidMount() {
+    const dataHash = '0xebf0a304f0e5a6445a7fd5850d00fd851837e8694184072e0f1b79037e447485';
+    const stow = stowClient();
+
+      stow.getRecord(dataHash).then(console.log);
+  }
+
   render() {
-    const secret = 'farts';
-    const keys = Linnia.util.genKeyPair();
+    const { record } = this.state;
     return (
       <View style={styles.container}>
-        <Text style={styles.instructions}>{JSON.stringify(keys)}</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <Text style={styles.instructions}>{JSON.stringify(record)}</Text>
       </View>
     );
   }
@@ -51,6 +48,7 @@ const styles = StyleSheet.create({
   instructions: {
     textAlign: 'center',
     color: '#333333',
+    fontFamily: 'Raleway',
     marginBottom: 5,
   },
 });

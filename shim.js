@@ -23,4 +23,16 @@ if (typeof localStorage !== 'undefined') {
 
 // If using the crypto shim, uncomment the following line to ensure
 // crypto is loaded first, so it can populate global.crypto
-require('crypto')
+global.crypto = require('crypto');
+
+global.theme = require('@stowprotocol/brand/theme').default;
+
+const base64 = require('base-64');
+
+if (!global.btoa) {
+    global.btoa = base64.encode;
+}
+
+if (!global.atob) {
+    global.atob = base64.decode;
+}

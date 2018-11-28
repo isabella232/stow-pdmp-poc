@@ -8,10 +8,14 @@
     "postinstall": "./node_modules/.bin/rn-nodeify --hack --install"
   },
   "dependencies": {
-    "@linniaprotocol/linnia-js": "^0.3.0",
+    "@material-ui/core": "^3.5.1",
+    "@stowprotocol/brand": "0.0.2",
+    "@stowprotocol/stow-js": "^0.3.6",
     "@tradle/react-native-http": "^2.0.1",
     "assert": "^1.4.1",
+    "base-64": "^0.1.0",
     "browserify-zlib": "^0.1.4",
+    "buffer": "^4.9.1",
     "console-browserify": "^1.1.0",
     "constants-browserify": "^1.0.0",
     "dns.js": "^1.0.1",
@@ -26,19 +30,24 @@
     "react-native": "0.57.5",
     "react-native-crypto": "^2.1.2",
     "react-native-level-fs": "^3.0.1",
+    "react-native-material-ui": "^1.30.1",
     "react-native-os": "^1.2.1",
     "react-native-randombytes": "^3.5.1",
     "react-native-stream": "^0.1.9",
     "react-native-tcp": "^3.3.0",
+    "react-native-truffle-hdwallet-provider": "git+https://github.com/bpeters/react-native-truffle-hdwallet-provider.git",
     "react-native-udp": "^2.3.1",
+    "react-native-vector-icons": "^6.1.0",
     "readable-stream": "^1.0.33",
     "stream-browserify": "^1.0.0",
     "string_decoder": "^0.10.31",
     "timers-browserify": "^1.4.2",
+    "truffle-hdwallet-provider": "0.0.6",
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "util": "^0.10.4",
-    "vm-browserify": "0.0.4"
+    "vm-browserify": "0.0.4",
+    "web3": "1.0.0-beta.33"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
@@ -75,6 +84,11 @@
     "tty": "tty-browserify",
     "vm": "vm-browserify",
     "tls": false
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
   },
   "browser": {
     "zlib": "browserify-zlib",

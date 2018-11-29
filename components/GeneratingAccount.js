@@ -60,9 +60,9 @@ class GeneratingAccount extends Component {
 			copy: 'Creating ethereum addresss'
 		});
 
-		return new Promise((resolve, reject) => {
-			setTimeout(() => {
-				const stow = stowClient();
+		return new Promise(async (resolve, reject) => {
+			setTimeout(async () => {
+			  const stow = await stowClient();
 			  const account = stow.web3.eth.accounts.create();
 			  this.saveAccount(account);
 	  		this.finishLoading();

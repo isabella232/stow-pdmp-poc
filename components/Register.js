@@ -3,8 +3,12 @@ import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import Button from './Button';
 import theme from '@stowprotocol/brand/theme';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { AsyncStorage } from 'react-native';
 
-const goToNext = navigation => () => navigation.navigate('GeneratingAccount');
+const goToNext = (navigation, role) => async () => {
+	await AsyncStorage.setItem('@Stow:role', role);
+	navigation.navigate('GeneratingAccount');
+}
 
 const Register = ({ navigation }) => (
 	<Grid style={styles.root}>
@@ -22,13 +26,13 @@ const Register = ({ navigation }) => (
 		<Row style={styles.row}>
 			<Button
 			    title='Patient'
-			    onPress={goToNext(navigation)}/>
+			    onPress={goToNext(navigation, 'patient')}/>
 			<Button
 			    title='Doctor'
-			    onPress={goToNext(navigation)}/>
+			    onPress={goToNext(navigation, 'doctor')}/>
 			<Button
 			    title='Pharmacy'
-			    onPress={goToNext(navigation)}/>
+			    onPress={goToNext(navigation, 'pharmacist')}/>
 		</Row>
 		<Row></Row>
 	</Grid>

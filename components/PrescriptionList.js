@@ -16,6 +16,12 @@ import theme from "@stowprotocol/brand/theme";
 class IssuePrescription extends Component {
 
   render = () => {
+    <Row style={styles.row}>
+      <Animated.Image
+        style={styles.spinner}
+        source={require("./../assets/images/logo-filled.png")}
+      />
+    </Row>;
     return (
       <Grid style={styles.container}>
         <Row style={styles.row}>

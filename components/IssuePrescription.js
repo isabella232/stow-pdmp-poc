@@ -13,10 +13,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import theme from "@stowprotocol/brand/theme";
 
 
-class IssuePrescription extends Component {
-
-  render = () => {
-    return (
+const IssuePrescription = ({ navigation }) => (
       <Grid style={styles.container}>
         <Row style={styles.row}>
           <Text style={styles.copy}>Issue Prescription</Text>
@@ -50,10 +47,6 @@ class IssuePrescription extends Component {
         </Row>
       </Grid>
     );
-  };
-}
-
-const { height, width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {

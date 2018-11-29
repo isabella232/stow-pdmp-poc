@@ -1,27 +1,27 @@
-import React from 'react';
-import { Button, View, Text, AsyncStorage } from 'react-native';
-import Register from './Register';
-import Home from './Home'
+import React from "react";
+import { Button, View, Text, AsyncStorage } from "react-native";
+import Register from "./Register";
+import IssuePrescription from "./IssuePrescription";
+import PrescriptionList from "./PrescriptionList";
+import Home from "./Home";
 
 class AuthContainer extends React.Component {
-
   constructor(props) {
     super();
     this.state = {
       loading: true,
-      key: ''
+      credentials: ""
     };
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('@Stow:ethereumPrivateKey')
-    .then((key) => {
+    AsyncStorage.getItem("@Stow:credentials").then(credentials => {
       this.setState({
-        key,
+        credentials,
         loading: false
       });
     });
-  }  
+  }
 
   render() {
     const { navigation } = this.props;
@@ -30,9 +30,19 @@ class AuthContainer extends React.Component {
       return <Text>Loading...</Text>;
     }
 
-    return this.state.key ? 
-      <Home navigation={navigation} /> : 
-      <Register navigation={navigation}/>;
+    let RoleComponent =
+      this.state.credentials.role === "doctor"
+        ? IssuePrescription
+        : PrescriptionList;
+
+    return this.state.credentials ? (
+      <RoleComponent
+        navigation={navigation}
+        credentials={JSON.parse(this.state.credentials)}
+      />
+    ) : (
+      <Register navigation={navigation} />
+    );
   }
 }
 

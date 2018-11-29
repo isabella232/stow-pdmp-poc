@@ -32,7 +32,7 @@ const AppContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
   render() {
-    return <PrescriptionList />;
+    return <AppContainer />;
   }
 }
 

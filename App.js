@@ -1,22 +1,23 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import './shim.js';
+import React from 'react';
+import { Button, View, Text } from 'react-native';
+import { createAppContainer, createStackNavigator } from 'react-navigation'; 
+import Register from './components/Register'
 
-type Props = {};
-export default class App extends Component<Props> {
+const RootStack = createStackNavigator(
+  {
+    Home: {
+      screen: Register,
+    },
+  },
+  {
+    initialRouteName: 'Home',
+  }
+);
 
+const AppContainer = createAppContainer(RootStack);
+
+export default class App extends React.Component {
   render() {
-    return (
-      <Text>Loading . . .</Text>
-    );
+    return <AppContainer />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  }
-});

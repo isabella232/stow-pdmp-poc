@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, View, Text, AsyncStorage } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation'; 
-import Register from './components/Register';
 import Home from './components/Home';
 
 const RootStack = createStackNavigator(

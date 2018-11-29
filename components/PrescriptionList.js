@@ -13,7 +13,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import theme from "@stowprotocol/brand/theme";
 
 
-const IssuePrescription = ({ navigation }) => (
+const PrescriptionList = ({ navigation, props }) => (
       <Grid style={styles.container}>
         <Row style={styles.row}>
           <Text style={styles.copy}>Issue Prescription</Text>
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default IssuePrescription;
+export default PrescriptionList;

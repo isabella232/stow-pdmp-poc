@@ -48,6 +48,8 @@ const IssuePrescription = ({ navigation }) => (
       </Grid>
     );
 
+const { height, width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
     textAlign: "center",

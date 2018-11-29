@@ -5,6 +5,7 @@ import AuthContainer from './components/AuthContainer';
 import GeneratingAccount from './components/GeneratingAccount';
 import Register from './components/Register';
 import Home from './components/Home';
+import PrescriptionList from './components/PrescriptionList'
 
 const RootStack = createStackNavigator(
   {
@@ -31,7 +32,7 @@ const AppContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
   render() {
-    return <AppContainer />;
+    return <PrescriptionList />;
   }
 }
 

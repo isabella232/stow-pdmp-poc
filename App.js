@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, View, Text } from 'react-native';
+import { Button, View, Text, AsyncStorage } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation'; 
-import Register from './components/Register'
+import Register from './components/Register';
+import Home from './components/Home';
 
 const RootStack = createStackNavigator(
   {
     Home: {
-      screen: Register,
+      screen: Home,
     },
   },
   {
@@ -21,3 +22,4 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
+

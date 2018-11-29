@@ -1,16 +1,29 @@
 import React from 'react';
 import { Button, View, Text, AsyncStorage } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation'; 
+import AuthContainer from './components/AuthContainer';
+import GeneratingAccount from './components/GeneratingAccount';
+import Register from './components/Register';
 import Home from './components/Home';
 
 const RootStack = createStackNavigator(
   {
-    Home: {
-      screen: Home,
+    AuthContainer: {
+      screen: AuthContainer,
     },
+    GeneratingAccount: {
+      screen: GeneratingAccount
+    },
+    Register: {
+      screen: Register
+    },
+    Home: {
+      screen: Home
+    }
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'AuthContainer',
+    headerMode: 'none',
   }
 );
 

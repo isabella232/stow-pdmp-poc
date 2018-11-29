@@ -1,33 +1,51 @@
 import React from 'react';
-import { Button, View, Text, AsyncStorage } from 'react-native';
-import Register from './Register';
+import theme from '@stowprotocol/brand/theme';
+import { Col, Row, Grid } from "react-native-easy-grid";
+import { StyleSheet, Text, AsyncStorage } from 'react-native';
+import Button from './Button';
 
-class Home extends React.Component {
+const purge = navigation => async () => {
+	await AsyncStorage.removeItem('@Stow:publicEncryptionKey');
+    await AsyncStorage.removeItem('@Stow:privateEncryptionKey');
+    await AsyncStorage.removeItem('@Stow:ethereumPrivateKey');
+    await AsyncStorage.removeItem('@Stow: ethereumAddress');
 
-  constructor(props) {
-    super();
-    this.state = {
-      loading: true,
-      key: ''
-    };
-  }
+    navigation.navigate('Register');
+};
 
-  componentDidMount() {
-    AsyncStorage.getItem('key')
-    .then((key) => {
-      this.setState({
-        key,
-        loading: false
-      });
-    });
-  }  
+const Home = ({ navigation }) => (
+	<Grid style={styles.root}>
+		<Row style={styles.row}>
+			<Text style={styles.title}>
+				Home
+			</Text>
+		</Row>
+		<Row></Row>
+		<Row style={styles.row}>
+			<Button
+				title='Purge'
+				onPress={purge(navigation)}
+			/>
+		</Row>
+	</Grid>
+);
 
-  render() {
-    if (this.state.loading) {
-      return <Text>Loading...</Text>;
-    }
-    return this.state.key ? ( <Text> Got some data! </Text> ) : <Register/>;
-  }
-}
+
+const styles = StyleSheet.create({
+  root: {
+	padding: 20,
+	textAlign: 'center',
+    backgroundColor: theme.palette.primary.main,
+  },
+  row: {
+  	flex: 1,
+  	justifyContent: 'center',
+  	alignItems: 'center',
+  },
+  title: {
+  	fontFamily: theme.typography.secondary,
+  	fontSize: 32
+  },
+});
 
 export default Home;

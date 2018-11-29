@@ -12,24 +12,22 @@ class Home extends React.Component {
     };
   }
 
-  loadKey() {
-    return AsyncStorage.getItem('key');
-  }
-
   componentDidMount() {
-    this.loadKey()
+    AsyncStorage.getItem('key')
     .then((key) => {
       this.setState({
         key,
-        loading: 'false'
+        loading: false
       });
     });
   }  
 
   render() {
-    if (this.state.loading === 'true') {
+    console.log(this.state.loading)
+    if (this.state.loading) {
       return <Text>Loading...</Text>;
     }
+    console.log(this.state.key)
     return this.state.key ? ( <Text> Got some data! </Text> ) : <Register/>;
   }
 }

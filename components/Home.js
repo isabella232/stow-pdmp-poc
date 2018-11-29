@@ -23,11 +23,9 @@ class Home extends React.Component {
   }  
 
   render() {
-    console.log(this.state.loading)
     if (this.state.loading) {
       return <Text>Loading...</Text>;
     }
-    console.log(this.state.key)
     return this.state.key ? ( <Text> Got some data! </Text> ) : <Register/>;
   }
 }

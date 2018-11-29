@@ -16,6 +16,7 @@ import Button from 'react-native-button';
 import Stow from '@stowprotocol/stow-js';
 import stowClient from './../services/stow';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import theme from '@stowprotocol/brand/theme'
 
 const spinValue = new Animated.Value(0);
 

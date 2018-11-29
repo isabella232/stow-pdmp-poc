@@ -40,7 +40,8 @@ class GeneratingAccount extends Component {
 		finished: false,
 		publicEncryptionKey: null,
 		privateEncryptionKey: null,
-		ethereumPrivateKey: null
+		ethereumPrivateKey: null,
+		ethereumAddress: null,
 	};
 
 	componentDidMount = () => {
@@ -70,6 +71,7 @@ class GeneratingAccount extends Component {
 
 	saveAccount = account => this.setState({
 		ethereumPrivateKey: account.privateKey,
+		ethereumAddress: account.address
 	});
 
 	generateAccount = () => {
@@ -96,12 +98,17 @@ class GeneratingAccount extends Component {
 	}
 
 	register = async () => {
-		const { publicEncryptionKey, privateEncryptionKey, ethereumPrivateKey } = this.state;
+		const { 
+			publicEncryptionKey, 
+			privateEncryptionKey, 
+			ethereumPrivateKey, 
+			ethereumAddress
+		} = this.state;
 
     await AsyncStorage.setItem('@Stow:publicEncryptionKey', publicEncryptionKey);
     await AsyncStorage.setItem('@Stow:privateEncryptionKey', privateEncryptionKey);
     await AsyncStorage.setItem('@Stow:ethereumPrivateKey', ethereumPrivateKey);
-
+    await AsyncStorage.setItem('@Stow: ethereumAddress', ethereumAddress);
 	};
 
 	render = () => {

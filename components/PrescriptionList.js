@@ -25,11 +25,10 @@ class PrescriptionList extends React.Component {
 
   componentDidMount() {
     fetch(
-      `https://qastg.api.stow-protocol.com/records?owner=${this.props.credentials.ethereumAddress}`
+      `https://qastg.api.stow-protocol.com/records?owner=${'0xa82ae2ac8d0c0f5399a68c44492cbc03f49a903d'}`
     )
       .then(response => response.json())
       .then(prescriptions => {
-        console.log(prescriptions)
         // can edit this mapping once we have data to play with
         prescriptions = prescriptions.map(prescription =>{
           prescription.metadata = JSON.parse(prescription.metadata)
@@ -37,7 +36,7 @@ class PrescriptionList extends React.Component {
           prescription.metadata.date = "2014-11-03T19:38:34.203Z";
           return prescription;
           })
-        console.log(prescriptions);
+        console.log(prescriptions)
         this.setState({ prescriptions });
       });
   }
@@ -45,10 +44,9 @@ class PrescriptionList extends React.Component {
   share(){}
 
   prescriptionMap(role) {
-    console.log(role, this.state.prescriptions);
     return this.state.prescriptions.map(prescription => {
       return (
-        <Row style={styles.row} key={prescription.dataHash}>
+        <Row style={styles.row} key={prescription.dataHash} onPress={() => this.props.navigation.navigate("Prescription", {prescription})}>
           <Col>
             <Text style={styles.text}>{prescription.metadata.substance}</Text>
             <Text style={styles.subtext}>
@@ -56,10 +54,10 @@ class PrescriptionList extends React.Component {
             </Text>
           </Col>
           <Col>
-          {// have to edit here for disabled and check for existing share Fill here is for Pharmacy to Fill}
+          {
+            // share function needs to be done Fill here is for pharmacy
+          }
             <Button title={role === "patient" ? "Share" : "Fill"} />
-          }
-          }
           </Col>
         </Row>
       );

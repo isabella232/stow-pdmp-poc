@@ -5,7 +5,8 @@ import AuthContainer from './components/AuthContainer';
 import GeneratingAccount from './components/GeneratingAccount';
 import Register from './components/Register';
 import Home from './components/Home';
-import PrescriptionList from './components/PrescriptionList'
+import PrescriptionList from './components/PrescriptionList';
+import Prescription from './components/Prescription';
 
 const RootStack = createStackNavigator(
   {
@@ -20,6 +21,9 @@ const RootStack = createStackNavigator(
     },
     Home: {
       screen: Home
+    },
+    Prescription: {
+      screen: Prescription
     }
   },
   {

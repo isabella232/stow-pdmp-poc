@@ -2,21 +2,19 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, AsyncStorage} from 'react-native';
 import QRCode from 'react-native-qrcode';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import theme from "@stowprotocol/brand/theme";
 
 class ShareCredentials extends Component {
 
 	state = {
-		publicEncryptionKey: null,
-		ethereumAddress: null
+		credentials: {}
 	};
 
 	getCredentials = async () => {
-	  const publicEncryptionKey = await AsyncStorage.getItem('@Stow:publicEncryptionKey');
-	  const ethereumAddress = await AsyncStorage.getItem('@Stow: ethereumAddress');
+	  const credentials = await AsyncStorage.getItem('@Stow:credentials');
 
 	  this.setState({
-	  	publicEncryptionKey,
-	  	ethereumAddress
+	  credentials
 	  });
 	};
 
@@ -25,7 +23,7 @@ class ShareCredentials extends Component {
 	}
 
 	render = () => {
-		const { ethereumAddress } = this.state;
+		const { credentials } = this.state;
 
 		return (
 			<Grid style={styles.root}>
@@ -35,8 +33,8 @@ class ShareCredentials extends Component {
 					</Text>
 				</Row>
 				<Row style={styles.row}>
-			    {ethereumAddress && <QRCode
-			      value={JSON.stringify(this.state)}
+			    {credentials && <QRCode
+			      value={JSON.stringify(this.state.credentials)}
 			      size={200}
 			      bgColor='black'
 			      fgColor='white'

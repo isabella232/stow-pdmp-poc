@@ -1,16 +1,45 @@
 import React from "react";
+import IPFS from 'ipfs-mini';
 import theme from "@stowprotocol/brand/theme";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { StyleSheet, Text, AsyncStorage } from "react-native";
 import Button from "./Button";
+import Stow from '@stowprotocol/stow-js'
 
-const goBack = navigation => async () => {
-  navigation.goBack();
-};
+const ipfs = new IPFS({
+      host: 'ipfs.infura.io',
+      port: 5001,
+      protocol: 'https',
+    });
 
-const Prescription = ({ navigation }) => {
-  const prescription = navigation.getParam("prescription");
-  console.log(prescription);
+class Prescription extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      data: null
+    };
+  }
+
+  componentDidMount() {
+ let prescription = this.props.navigation.getParam('prescription');
+ let credentials = this.props.navigation.getParam('credentials');
+ console.log(prescription, credentials)
+  new Promise((resolve, reject) => {
+      ipfs.cat(prescription.dataUri, (err, ipfsRed) => {
+        err ? reject(err) : resolve(ipfsRed);
+      });
+    }).then(file =>{
+    	const encryptedData = JSON.parse(file);
+    	return Stow.util.decrypt(`br3COPKC40F3n5nprnpxCoyotrAmLAN9mPVWyEYyxDk=`, encryptedData);
+    }).then(data => {
+    	console.log(data)
+    })
+  }
+
+  share() {}
+
+  render() {
+  const prescription = this.props.navigation.getParam('prescription')
   return (
     <Grid style={styles.root}>
       <Row style={styles.row}>
@@ -38,11 +67,13 @@ const Prescription = ({ navigation }) => {
         <Text style={styles.subtext}> {prescription.metadata.refills} </Text>
       </Row>
       <Row style={styles.row}>
-        <Button title="Back" onPress={goBack(navigation)} />
+        <Button title="Back" onPress={() => this.props.navigation.goBack()} />
       </Row>
     </Grid>
   );
 };
+
+}
 
 const styles = StyleSheet.create({
   root: {

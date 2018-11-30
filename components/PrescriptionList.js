@@ -20,23 +20,53 @@ class PrescriptionList extends React.Component {
     };
     this.prescriptionMap = this.prescriptionMap.bind(this);
     this.share = this.share.bind(this);
+    this.handlePharmacy = this.handlePharmacy.bind(this);
+    this.handlePatient = this.handlePatient.bind(this);
+  }
+
+  handlePharmacy() {
+    let permissions;
+    fetch(
+      `https://qastg.api.stow-protocol.com/users/${
+        this.props.credentials.ethereumAddress
+      }/permissions`
+    )
+      .then(response => response.json())
+      .then(allPermissions => {
+        permissions = allPermissions.asViewer;
+        return Promise.all(
+          allPermissions.asViewer.map(async permissions => {
+            return fetch(
+              `https://qastg.api.stow-protocol.com/records/${
+                permission.dataHash
+              }`
+            ).then(response => response.json());
+          })
+        )
+      })
+      .then(viewerRecords => {
+        return viewerRecords.map((viewerRecord, i) => Object.assign(viewerRecord, {dataUri: permissions[i].dataUril}))
+      })
+  }
+
+  handlePatient() {
+    return fetch(
+      `https://qastg.api.stow-protocol.com/records?owner=${
+        '0xa82ae2ac8d0c0f5399a68c44492cbc03f49a903d'
+      }`
+    ).then(response => response.json());
   }
 
   componentDidMount() {
-    fetch(
-      `https://qastg.api.stow-protocol.com/records?owner=${"0xa82ae2ac8d0c0f5399a68c44492cbc03f49a903d"}`
-    )
-      .then(response => response.json())
+    let roleFunction =
+      this.props.credentials.role === "patient"
+        ? this.handlePatient
+        : this.handlePharmacy;
+    roleFunction()
       .then(prescriptions => {
         // can edit this mapping once we have data to play with
         prescriptions = prescriptions.map(prescription => {
           prescription.metadata = JSON.parse(prescription.metadata);
-          prescription.metadata.substance = "hugs";
-          prescription.metadata.date = "2014-11-03T19:38:34.203Z";
-          prescription.metadata.dosage = "30mg";
-          prescription.metadata.frequency = "once a day";
-          prescription.metadata.duration = "for three weeks";
-          prescription.metadata.refills = "1";
           return prescription;
         });
         this.setState({ prescriptions });
@@ -48,9 +78,16 @@ class PrescriptionList extends React.Component {
   prescriptionMap(role) {
     return this.state.prescriptions.map(prescription => {
       return (
-        <Row style={styles.row} key={prescription.dataHash} onPress={() =>
-              this.props.navigation.navigate("Prescription", { prescription })
-            }>
+        <Row
+          style={styles.row}
+          key={prescription.dataHash}
+          onPress={() =>
+            this.props.navigation.navigate("Prescription", {
+              prescription,
+              credentials: this.props.credentials
+            })
+          }
+        >
           <Col>
             <Text style={styles.text}>{prescription.metadata.substance}</Text>
             <Text style={styles.subtext}>

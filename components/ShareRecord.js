@@ -3,18 +3,32 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import {StyleSheet, Text, View, AsyncStorage, Dimensions} from 'react-native';
 import Button from 'react-native-button';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import theme from '@stowprotocol/brand/theme';
 
 class ShareRecord extends Component {
 	state = {
 		credentials: ''
 	};
 
-	render() {
-		const { onCredentialsReceived } = this.props;
+  appendPrescription = e => {
+    const { prescription } = this.props.navigation.state.params;
+    const credentials = e.data;
+    debugger;
+    this.props.navigation.navigate('RecordProcessing', {
+      prescription,
+      credentials
+    });
+  };
+
+	render = () => {
+		const { 
+      onCredentialsReceived,
+      prescription
+    } = this.props;
 
 		return (
 			 <QRCodeScanner
-        onRead={(e) => this.setState({credentials: JSON.stringify(e)})}
+        onRead={this.appendPrescription}
         containerStyle={styles.root}
         topContent={
 					<Text style={styles.title}>
@@ -23,14 +37,12 @@ class ShareRecord extends Component {
         }
         bottomContent={
           <Text style={styles.copy}>
-						To share your prescription with you pharmacy, please scan their QRCode. This will
-						pull their blockchain credentials into your application so that it can share your
-						prescription with them securely.
+						{this.state.credentials}
 					</Text>
         }
       />
 		);
-	}
+	};
 }
 
 const {height, width} = Dimensions.get('window');

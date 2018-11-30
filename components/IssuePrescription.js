@@ -4,90 +4,120 @@ import {
   Text,
   TextInput,
   View,
-  Button,
   Dimensions,
   Animated,
   Easing
 } from "react-native";
+
 import { Col, Row, Grid } from "react-native-easy-grid";
 import theme from "@stowprotocol/brand/theme";
+import Button from './Button';
+import { Jiro } from 'react-native-textinput-effects';
 
 
-const IssuePrescription = ({ navigation }) => (
+class IssuePrescription extends Component {
+  state = {
+    dosage: '',
+    substance: '',
+    frequency: '',
+    timeframe: '',
+    timesToRefill: ''
+  };
+
+  onChange = prop => text => this.setState({
+    [prop]: text
+  });
+
+  prescribe = () => this.props.navigation.navigate('ShareRecord', {
+    prescription: this.state
+  });
+
+  render() {
+    return (
       <Grid style={styles.container}>
         <Row style={styles.row}>
           <Text style={styles.copy}>Issue Prescription</Text>
         </Row>
         <Row style={styles.row}>
-          <Text style={styles.text}>Patient will take:</Text>
+          <Jiro
+            label='dosage'
+            style={styles.input}
+            borderColor={theme.palette.secondary.main}
+            labelStyle={styles.label}
+            inputStyle={styles.label}
+            onChangeText={this.onChange('dosage')}
+          />
         </Row>
         <Row style={styles.row}>
-          <TextInput placeholder="30" style={styles.inputAmount} />
-          <TextInput placeholder="mg" style={styles.inputUnit} />
+          <Jiro
+            label='substance'
+            style={styles.input}
+            borderColor={theme.palette.secondary.main}
+            labelStyle={styles.label}
+            inputStyle={styles.label}
+            onChangeText={this.onChange('substance')}
+          />
         </Row>
         <Row style={styles.row}>
-          <Text style={styles.text}>Of</Text>
-          <TextInput placeholder="30" style={styles.inputDetails} />
+          <Jiro
+            label='frequency'
+            style={styles.input}
+            borderColor={theme.palette.secondary.main}
+            labelStyle={styles.label}
+            inputStyle={styles.label}
+            onChangeText={this.onChange('frequency')}
+          />
         </Row>
         <Row style={styles.row}>
-          <Text style={styles.text}>a</Text>
-          <TextInput placeholder="30" style={styles.inputDetails} />
+          <Jiro
+            label='timeframe'
+            style={styles.input}
+            borderColor={theme.palette.secondary.main}
+            labelStyle={styles.label}
+            inputStyle={styles.label}
+            onChangeText={this.onChange('timeframe')}
+          />
         </Row>
         <Row style={styles.row}>
-          <Text style={styles.text}>for</Text>
-          <TextInput placeholder="30" style={styles.inputDetails} />
+          <Jiro
+            label='times to refill'
+            style={styles.input}
+            borderColor={theme.palette.secondary.main}
+            labelStyle={styles.label}
+            inputStyle={styles.label}
+            onChangeText={this.onChange('timesToRefill')}
+          />
         </Row>
         <Row style={styles.row}>
           <Button
-            buttonStyle={styles.button}
-            onPress={this.register}
-            color="white"
+            onPress={this.prescribe}
             title="Prescribe"
           />
         </Row>
       </Grid>
     );
+  }
+}
 
 const { height, width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
     textAlign: "center",
-    padding: 20,
+    padding: 50,
     backgroundColor: theme.palette.primary.main
+  },
+  input: {
+    width: width - 60
+  },
+  label: {
+    color: 'white',
+    fontFamily: theme.typography.primary
   },
   row: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  inputAmount: {
-    width: 40,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1
-  },
-  inputUnit: {
-    width: 40,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    marginLeft: 10
-  },
-  inputDetails: {
-    width: 80,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    marginLeft: 10
-  },
-  button: {
-    backgroundColor: theme.palette.secondary.main,
-    fontFamily: theme.typography.secondary,
-    fontSize: 20,
-    paddingTop: 12,
-    paddingBottom: 12,
-    width: width - 20
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   text: {
     color: "black",

@@ -5,7 +5,9 @@ import AuthContainer from './components/AuthContainer';
 import GeneratingAccount from './components/GeneratingAccount';
 import Register from './components/Register';
 import Home from './components/Home';
-import PrescriptionList from './components/PrescriptionList'
+import IssuePrescription from './components/IssuePrescription';
+import ShareRecord from './components/ShareRecord';
+import RecordProcessing from './components/RecordProcessing';
 
 const RootStack = createStackNavigator(
   {
@@ -20,10 +22,19 @@ const RootStack = createStackNavigator(
     },
     Home: {
       screen: Home
+    },
+    IssuePrescription: {
+      screen: IssuePrescription
+    },
+    ShareRecord: {
+      screen: ShareRecord
+    },
+    RecordProcessing: {
+      screen: RecordProcessing
     }
   },
   {
-    initialRouteName: 'AuthContainer',
+    initialRouteName: 'IssuePrescription',
     headerMode: 'none',
   }
 );
@@ -32,7 +43,7 @@ const AppContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
   render() {
-    return <PrescriptionList />;
+    return <AppContainer />;
   }
 }
 

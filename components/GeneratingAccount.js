@@ -28,7 +28,9 @@ class GeneratingAccount extends Component {
 	componentDidMount = () => {
 		this
 			.generateKeys()
-			.then(this.generateAccount);
+			.then(this.generateAccount)
+			.then(this.giveEther)
+			.then(this.finishLoading);
 	};
 
 	saveKeys = keys => this.setState({
@@ -46,9 +48,40 @@ class GeneratingAccount extends Component {
 				const keys = Stow.util.genKeyPair();
 				this.saveKeys(keys);
 				resolve();
-			}, 3000);
+			}, 2000);
 		});
 	};
+
+	giveEther = account => {
+		return new Promise((resolve, reject) => {
+			setTimeout(async() => {
+				const { address } = account;
+				console.log(account);
+
+				this.setState({
+					copy: 'Fueling Address'
+				});
+
+				const stow = await stowClient();
+				const [myAccount] = await stow.web3.eth.getAccounts();
+
+				try {
+					await stow.web3.eth.sendTransaction({
+						from: myAccount,
+						to: address, 
+						value: stow.web3.utils.toWei("0.1", "ether")
+					});
+				} catch (e) {
+
+				}
+
+				resolve();
+			}, 1000);
+
+		});
+
+
+	}
 
 	saveAccount = account => this.setState({
 		ethereumPrivateKey: account.privateKey,
@@ -62,12 +95,11 @@ class GeneratingAccount extends Component {
 
 		return new Promise(async (resolve, reject) => {
 			setTimeout(async () => {
-			  const stow = await stowClient();
-			  const account = stow.web3.eth.accounts.create();
-			  this.saveAccount(account);
-	  		this.finishLoading();
-	  		resolve();
-	  	}, 3000)
+				const stow = await stowClient();
+				const account = await stow.web3.eth.accounts.create();
+				this.saveAccount(account);
+	  			resolve(account);
+	  		}, 2000);
 		});
 	}
 
@@ -91,7 +123,7 @@ class GeneratingAccount extends Component {
 	    await AsyncStorage.setItem('@Stow:ethereumPrivateKey', ethereumPrivateKey);
 	    await AsyncStorage.setItem('@Stow: ethereumAddress', ethereumAddress);
 
-	    this.props.navigation.navigate('Home');
+	    this.props.navigation.navigate('IssuePrescription');
 	};
 
 	render = () => {

@@ -5,15 +5,12 @@ import { StyleSheet, Text, AsyncStorage } from 'react-native';
 import Button from './Button';
 
 const purge = navigation => async () => {
-	await AsyncStorage.removeItem('@Stow:publicEncryptionKey');
-    await AsyncStorage.removeItem('@Stow:privateEncryptionKey');
-    await AsyncStorage.removeItem('@Stow:ethereumPrivateKey');
-    await AsyncStorage.removeItem('@Stow: ethereumAddress');
-
-    navigation.navigate('Register');
+	await AsyncStorage.removeItem('@Stow:credentials');
+   	navigation.navigate('Register');
 };
 
-const Home = ({ navigation }) => (
+const Home = ({ navigation, credentials }) => {
+	return (
 	<Grid style={styles.root}>
 		<Row style={styles.row}>
 			<Text style={styles.title}>
@@ -28,7 +25,7 @@ const Home = ({ navigation }) => (
 			/>
 		</Row>
 	</Grid>
-);
+)};
 
 
 const styles = StyleSheet.create({

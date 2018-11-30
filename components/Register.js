@@ -6,7 +6,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import { AsyncStorage } from 'react-native';
 
 const goToNext = (navigation, role) => async () => {
-	await AsyncStorage.setItem('@Stow:role', role);
+	await AsyncStorage.setItem('@Stow:credentials', JSON.stringify({role}));
 	navigation.navigate('GeneratingAccount');
 }
 

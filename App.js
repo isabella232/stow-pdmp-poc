@@ -8,6 +8,8 @@ import Home from './components/Home';
 import IssuePrescription from './components/IssuePrescription';
 import ShareRecord from './components/ShareRecord';
 import RecordProcessing from './components/RecordProcessing';
+import PrescriptionList from './components/PrescriptionList';
+import Prescription from './components/Prescription';
 
 const RootStack = createStackNavigator(
   {
@@ -31,10 +33,13 @@ const RootStack = createStackNavigator(
     },
     RecordProcessing: {
       screen: RecordProcessing
+    },    
+    Prescription: {
+      screen: Prescription
     }
   },
   {
-    initialRouteName: 'IssuePrescription',
+    initialRouteName: 'AuthContainer',
     headerMode: 'none',
   }
 );

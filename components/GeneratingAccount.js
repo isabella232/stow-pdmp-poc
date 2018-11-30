@@ -1,18 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import {
-	StyleSheet, 
-	Text, 
-	View, 
-	AsyncStorage
-} from 'react-native';
+import { StyleSheet, Text, View, AsyncStorage } from "react-native";
 
-import Button from './Button';
-import Stow from '@stowprotocol/stow-js';
-import stowClient from './../services/stow';
+import Button from "./Button";
+import Stow from "@stowprotocol/stow-js";
+import stowClient from "./../services/stow";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import theme from '@stowprotocol/brand/theme'
-import Spinner from './Spinner';
+import theme from "@stowprotocol/brand/theme";
+import Spinner from "./Spinner";
 
 class GeneratingAccount extends Component {
 
@@ -110,58 +105,61 @@ class GeneratingAccount extends Component {
 	  });
 	}
 
-	register = async () => {
-		const { 
-			publicEncryptionKey, 
-			privateEncryptionKey, 
-			ethereumPrivateKey, 
-			ethereumAddress
-		} = this.state;
+  register = async () => {
+    const {
+      publicEncryptionKey,
+      privateEncryptionKey,
+      ethereumPrivateKey,
+      ethereumAddress
+    } = this.state;
 
-	    await AsyncStorage.setItem('@Stow:publicEncryptionKey', publicEncryptionKey);
-	    await AsyncStorage.setItem('@Stow:privateEncryptionKey', privateEncryptionKey);
-	    await AsyncStorage.setItem('@Stow:ethereumPrivateKey', ethereumPrivateKey);
-	    await AsyncStorage.setItem('@Stow: ethereumAddress', ethereumAddress);
 
-	    this.props.navigation.navigate('IssuePrescription');
-	};
+    await AsyncStorage.mergeItem('@Stow:credentials', JSON.stringify({
+      publicEncryptionKey,
+      privateEncryptionKey,
+      ethereumPrivateKey,
+      ethereumAddress
+    }));
 
-	render = () => {
-		const { copy, dots, finished } = this.state;
-		return (
-			<Grid style={styles.container}>
-				<Row style={styles.row}>
-					<Text style={styles.copy}>{copy}</Text>
-				</Row>
-				<Row style={styles.row}>
-					<Spinner />
-				</Row>
-				<Row style={styles.row}>
-					{finished && <Button
-						title='Get Started'
-						onPress={this.register}
-					/>}
-				</Row>
-			</Grid>			
-		);
-	}
+    const credentials = await AsyncStorage.getItem('@Stow:credentials');
+
+      return this.props.navigation.navigate("AuthContainer", { credentials: JSON.parse(credentials) });
+
+  };
+
+  render = () => {
+    const { copy, finished } = this.state;
+    return (
+      <Grid style={styles.container}>
+        <Row style={styles.row}>
+          <Text style={styles.copy}>{copy}</Text>
+        </Row>
+        <Row style={styles.row}>
+          <Spinner />
+        </Row>
+        <Row style={styles.row}>
+          {finished && <Button title="Get Started" onPress={this.register} />}
+        </Row>
+      </Grid>
+    );
+  };
 }
 
 const styles = StyleSheet.create({
   container: {
-		textAlign: 'center',
-		padding: 20,
-    backgroundColor: theme.palette.primary.main,
+    textAlign: "center",
+    padding: 20,
+    backgroundColor: theme.palette.primary.main
   },
   row: {
-  	flex: 1,
-  	justifyContent: 'center',
-  	alignItems: 'center',
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   copy: {
-  	fontFamily: theme.typography.secondary,
-  	textAlign: 'center',
-  	fontSize: 32,
+    fontFamily: theme.typography.secondary,
+    textAlign: "center",
+    fontSize: 32
   }
 });
 

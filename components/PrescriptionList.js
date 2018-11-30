@@ -4,49 +4,124 @@ import {
   Text,
   TextInput,
   View,
-  Button,
   Dimensions,
   Animated,
   Easing
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import theme from "@stowprotocol/brand/theme";
+import Button from "react-native-button";
+import {grantPermission} from './../services/grantPermission'
 
+class PrescriptionList extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      prescriptions: []
+    };
+    this.prescriptionMap = this.prescriptionMap.bind(this);
+    this.share = this.share.bind(this);
+    this.handlePharmacy = this.handlePharmacy.bind(this);
+    this.handlePatient = this.handlePatient.bind(this);
+  }
 
-const PrescriptionList = ({ navigation, props }) => (
+  handlePharmacy() {
+    let permissions;
+    return fetch(
+      `https://qastg.api.stow-protocol.com/users/${
+        this.props.credentials.ethereumAddress
+      }/permissions`
+      ).then(response => {
+        return response.json()
+      })
+      .then(allPermissions => {
+        permissions = allPermissions.asViewer;
+        let promises = permissions.map(permissions => {
+            return fetch(
+              `https://qastg.api.stow-protocol.com/records/${
+                permission.dataHash
+              }`
+            )
+            .then(response => {
+              return response.json()
+            });
+          })
+        return Promise.all(promises)
+      })
+      .then(viewerRecords => {
+        return viewerRecords.map((viewerRecord, i) => Object.assign(viewerRecord, {dataUri: permissions[i].dataUril}))
+      })
+  }
+
+  handlePatient() {
+    return fetch(
+      `https://qastg.api.stow-protocol.com/records?owner=${
+        '0xa82ae2ac8d0c0f5399a68c44492cbc03f49a903d'
+      }`
+    ).then(response => response.json());
+  }
+
+  componentDidMount() {
+    let roleFunction =
+      this.props.credentials.role === "patient"
+        ? this.handlePatient
+        : this.handlePharmacy;
+    roleFunction()
+      .then(prescriptions => {
+        // can edit this mapping once we have data to play with
+        prescriptions = prescriptions.map(prescription => {
+          prescription.metadata = JSON.parse(prescription.metadata);
+          return prescription;
+        });
+        this.setState({ prescriptions });
+      });
+    }
+
+  share() {}
+
+  prescriptionMap(role) {
+    return this.state.prescriptions.map(prescription => {
+      return (
+        <Row
+          style={styles.row}
+          key={prescription.dataHash}
+          onPress={() =>
+            this.props.navigation.navigate("Prescription", {
+              prescription,
+              credentials: this.props.credentials
+            })
+          }
+        >
+          <Col>
+            <Text style={styles.text}>{prescription.metadata.substance}</Text>
+            <Text style={styles.subtext}>
+              {new Date(prescription.metadata.date).toString()}
+            </Text>
+          </Col>
+          <Col>
+            {
+              // share function needs to be done Fill here is for pharmacy
+            }
+            <Button style={styles.button} onPress={this.share}>
+              {role === "patient" ? "Share" : "Fill"}
+            </Button>
+          </Col>
+        </Row>
+      );
+    });
+  }
+
+  render() {
+    return (
       <Grid style={styles.container}>
         <Row style={styles.row}>
-          <Text style={styles.copy}>Issue Prescription</Text>
+          <Text style={styles.copy}>Prescriptions</Text>
         </Row>
-        <Row style={styles.row}>
-          <Text style={styles.text}>Patient will take:</Text>
-        </Row>
-        <Row style={styles.row}>
-          <TextInput placeholder="30" style={styles.inputAmount} />
-          <TextInput placeholder="mg" style={styles.inputUnit} />
-        </Row>
-        <Row style={styles.row}>
-          <Text style={styles.text}>Of</Text>
-          <TextInput placeholder="30" style={styles.inputDetails} />
-        </Row>
-        <Row style={styles.row}>
-          <Text style={styles.text}>a</Text>
-          <TextInput placeholder="30" style={styles.inputDetails} />
-        </Row>
-        <Row style={styles.row}>
-          <Text style={styles.text}>for</Text>
-          <TextInput placeholder="30" style={styles.inputDetails} />
-        </Row>
-        <Row style={styles.row}>
-          <Button
-            buttonStyle={styles.button}
-            onPress={this.register}
-            color="white"
-            title="Prescribe"
-          />
-        </Row>
+        {this.prescriptionMap(this.props.credentials.role)}
       </Grid>
     );
+  }
+}
 
 const { height, width } = Dimensions.get("window");
 
@@ -61,43 +136,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  inputAmount: {
-    width: 40,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1
-  },
-  inputUnit: {
-    width: 40,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    marginLeft: 10
-  },
-  inputDetails: {
-    width: 80,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    marginLeft: 10
-  },
-  button: {
-    backgroundColor: theme.palette.secondary.main,
-    fontFamily: theme.typography.secondary,
-    fontSize: 20,
-    paddingTop: 12,
-    paddingBottom: 12,
-    width: width - 20
-  },
   text: {
     color: "black",
     fontFamily: theme.typography.secondary,
     fontSize: 15
   },
+  subtext: {
+    color: "black",
+    fontFamily: theme.typography.secondary,
+    fontSize: 10
+  },
   copy: {
     fontFamily: theme.typography.secondary,
     textAlign: "center",
     fontSize: 32
+  },
+  button: {
+    color: "white",
+    backgroundColor: theme.palette.secondary.main,
+    fontFamily: theme.typography.secondary,
+    fontSize: 10,
+    paddingTop: 12,
+    paddingBottom: 12,
+    width: width - 230,
+    marginLeft: 20
   }
 });
 

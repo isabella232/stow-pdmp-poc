@@ -3,26 +3,34 @@ import stowClient from './../services/stow';
 import Stow from '@stowprotocol/stow-js';
 import { Grid, Row } from 'react-native-easy-grid';
 import Spinner from './Spinner';
-import { Text, AsyncStorage } from 'react-native';
-import IPFS from 'ipfs-mini'
+import { Text, AsyncStorage, StyleSheet } from 'react-native';
+import IPFS from 'ipfs-mini';
+import Button from './Button';
+import theme from '@stowprotocol/brand/theme';
 
 class RecordProcessing extends Component {
+
 	state = {
-		publicEncryptionKey: ''
+		finished: false
 	};
+
 	encryptPrescription = async () => {
-		const { credentials, prescription } = this.props.navigation.state.params;
+		let { credentials, prescription } = this.props.navigation.state.params;
 		const { publicEncryptionKey } = JSON.parse(JSON.parse(credentials));
-		let unencrypted = Object({}, prescription);
-		unencrypted.issuedAt = new Date().toISOString();
+		const { substance } = prescription;
+		prescription.issuedAt = new Date().toISOString();
 
 		const encrypted = await Stow.util.encrypt(
     		publicEncryptionKey,
-     		unencrypted,
+     		prescription,
   		);
 
-  		return { unencrypted, encrypted };
+  		return { prescription, encrypted };
 	};
+
+	goBackHome = () => {
+		this.props.navigation.navigate('IssuePrescription');
+	}
 
 	uploadPrescription = encrypted => {
 		const ipfs = new IPFS({ host: 'ipfs.infura.io', port: '5001', protocol: 'https' });
@@ -44,18 +52,14 @@ class RecordProcessing extends Component {
 	});
 
 	appendRecord = async (content, dataUri) => {
-		const { unencrypted, encrypted } = content;
+		const { prescription, encrypted } = content;
 		const { credentials } = this.props.navigation.state.params;
 		const { ethereumAddress } = JSON.parse(JSON.parse(credentials));
 		const stow = await stowClient();
-		const dataHash = stow.web3.utils.sha3(JSON.stringify(unencrypted));
+		const dataHash = stow.web3.utils.sha3(JSON.stringify(prescription));
 		const { records, users } = await stow.getContractInstances();
-		const metadata = this.formMetadata(unencrypted);
+		const metadata = this.formMetadata(prescription);
 		const [myAccount] = await stow.web3.eth.getAccounts();
-		const privateKey = await AsyncStorage.getItem('@Stow:ethereumPrivateKey');
-		const address = await AsyncStorage.getItem('@Stow: ethereumAddress');
-		
-		this.setState({ address, myAccount })
 
 		return records.addRecordByProvider(
 			dataHash,
@@ -71,42 +75,51 @@ class RecordProcessing extends Component {
 	componentDidMount = async () => {
 		const content = await this.encryptPrescription();
 		const dataUri = await this.uploadPrescription(content.encrypted);
-		const dataHash = await this.appendRecord(content, dataUri)
+		const dataHash = await this.appendRecord(content, dataUri);
+
+		this.setState({ finished: true });
 	}
 
 	render = () => {
+		const { finished } = this.state;
 		return (
-			<Grid>
-				<Row>
-					<Text>
-						Appending Prescription to Blockchain
+			<Grid style={styles.container}>
+				<Row style={styles.row}>
+					<Text style={styles.title}>
+						{finished ? 'Great! Prescription has been shared on the blockchain.' : 'Appending Prescription to Blockchain'}
 					</Text>
 				</Row>
-				<Row>
-
-					<Text>
-					{'myAccount'}
-					</Text>
-					<Text>
-					{this.state.myAccount}
-					</Text>
-
-					<Text>
-
-					</Text>
-
+				<Row style={styles.row}>
+					<Spinner shouldSpin={true} />
 				</Row>
-				<Row>
-					<Text>
-					{'address'}
-					</Text>
-					<Text>
-					{this.state.address}
-					</Text>
+				<Row style={styles.row}>
+					{finished && <Button
+						title='Go Back'
+						onPress={this.goBackHome}
+					/>}
 				</Row>
 			</Grid>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+  container: {
+    textAlign: "center",
+    padding: 20,
+    backgroundColor: theme.palette.primary.main
+  },
+  row: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  title: {
+    fontFamily: theme.typography.secondary,
+    textAlign: "center",
+    fontSize: 32
+  }
+});
+
 
 export default RecordProcessing;

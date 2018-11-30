@@ -11,12 +11,13 @@ class ShareRecord extends Component {
 	};
 
   appendPrescription = e => {
-    const { prescription } = this.props.navigation.state.params;
+    const { prescription, dataHash } = this.props.navigation.state.params;
     const credentials = e.data;
-    debugger;
-    this.props.navigation.navigate('RecordProcessing', {
+    
+    this.props.navigation.navigate(dataHash ? 'PermissionProcessing' : 'RecordProcessing', {
       prescription,
-      credentials
+      credentials,
+      dataHash
     });
   };
 
@@ -32,12 +33,14 @@ class ShareRecord extends Component {
         containerStyle={styles.root}
         topContent={
 					<Text style={styles.title}>
-						Share Record
+						Share Prescription
 					</Text>
         }
         bottomContent={
           <Text style={styles.copy}>
-						{this.state.credentials}
+						To share your prescription, please scan the other party's QRCode. This will
+            pull their blockchain credentials into your application so that it can share your
+            prescription with them securely.
 					</Text>
         }
       />

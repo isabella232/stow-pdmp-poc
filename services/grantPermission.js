@@ -8,8 +8,9 @@ const ipfs = new IPFS({
       protocol: 'https',
     });
 
-export const grantPermission = async (user, dataHash, dataUri, ownerEncryptionPrivateKey, viewerEthereumAddress, viewerEncyptionPublicKey) => {
+export const grantPermission = async (user, dataHash, ownerEncryptionPrivateKey, viewerEthereumAddress, viewerEncyptionPublicKey) => {
   const stow = await stowClient();
+  const record = await stow.getRecord(dataHash);
   const web3 = stow.web3
 
   let file; let decryptedData; let reencrypted; let IPFSDataUri; 
@@ -17,7 +18,7 @@ export const grantPermission = async (user, dataHash, dataUri, ownerEncryptionPr
   // Pull the owner encrypted record down from ipfs
   try {
     file = await new Promise((resolve, reject) => {
-      ipfs.cat(dataUri, (err, ipfsRed) => {
+      ipfs.cat(record.dataUri, (err, ipfsRed) => {
         err ? reject(err) : resolve(ipfsRed);
       });
     });

@@ -56,7 +56,7 @@ class PrescriptionList extends React.Component {
   handlePatient() {
     return fetch(
       `https://qastg.api.stow-protocol.com/records?owner=${
-        '0xa82ae2ac8d0c0f5399a68c44492cbc03f49a903d'
+        '0x1B582679c0A0EB83236B2e1D5e0454fc341fAA52&property=substance'
       }`
     ).then(response => response.json());
   }
@@ -77,7 +77,12 @@ class PrescriptionList extends React.Component {
       });
     }
 
-  share() {}
+  share = prescription => () => {
+    this.props.navigation.navigate('ShareRecord', {
+      prescription,
+      dataHash: prescription.dataHash
+    });
+  }
 
   prescriptionMap(role) {
     return this.state.prescriptions.map(prescription => {
@@ -93,16 +98,15 @@ class PrescriptionList extends React.Component {
           }
         >
           <Col>
-            <Text style={styles.text}>{prescription.metadata.substance}</Text>
             <Text style={styles.subtext}>
-              {new Date(prescription.metadata.date).toString()}
+              {new Date(prescription.metadata.duration).toString()}
             </Text>
           </Col>
           <Col>
             {
               // share function needs to be done Fill here is for pharmacy
             }
-            <Button style={styles.button} onPress={this.share}>
+            <Button style={styles.button} onPress={this.share(prescription)}>
               {role === "patient" ? "Share" : "Fill"}
             </Button>
           </Col>
@@ -128,13 +132,16 @@ const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     textAlign: "center",
-    padding: 20,
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 40,
+    paddingTop: 100,
     backgroundColor: theme.palette.primary.main
   },
   row: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   text: {
     color: "black",

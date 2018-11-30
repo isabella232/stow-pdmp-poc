@@ -8,8 +8,15 @@ import {
 } from 'react-native';
 
 class Spinner extends Component {
-	constructor() {
-		super();
+	spin = '0deg';
+
+	componentDidMount() {
+		this.startAnimation();
+	}
+
+	startAnimation = () => {
+		const { shouldSpin } = this.props;
+
 		const spinValue = new Animated.Value(0);
 
 		Animated.timing(
@@ -19,7 +26,11 @@ class Spinner extends Component {
 		    duration: 6000,
 		    easing: Easing.linear
 		  }
-		).start();
+		).start((o) => {
+			if (shouldSpin) {
+				this.startAnimation();
+			}
+		});
 
 		this.spin = spinValue.interpolate({
 		  inputRange: [0, 1],

@@ -51,7 +51,6 @@ class GeneratingAccount extends Component {
 		return new Promise((resolve, reject) => {
 			setTimeout(async() => {
 				const { address } = account;
-				console.log(account);
 
 				this.setState({
 					copy: 'Fueling Address'
@@ -74,8 +73,6 @@ class GeneratingAccount extends Component {
 			}, 1000);
 
 		});
-
-
 	}
 
 	saveAccount = account => this.setState({
@@ -101,7 +98,7 @@ class GeneratingAccount extends Component {
 	finishLoading = () => {
 	  this.setState({ 
 	  	finished: true,
-	  	copy: `Congrats! You're ready to get started`,
+	  	copy: `Congrats! You're ready to get started`
 	  });
 	}
 
@@ -113,7 +110,6 @@ class GeneratingAccount extends Component {
       ethereumAddress
     } = this.state;
 
-
     await AsyncStorage.mergeItem('@Stow:credentials', JSON.stringify({
       publicEncryptionKey,
       privateEncryptionKey,
@@ -123,19 +119,19 @@ class GeneratingAccount extends Component {
 
     const credentials = await AsyncStorage.getItem('@Stow:credentials');
 
-      return this.props.navigation.navigate("AuthContainer", { credentials: JSON.parse(credentials) });
+    return this.props.navigation.navigate("AuthContainer", { credentials: JSON.parse(credentials) });
 
   };
 
   render = () => {
-    const { copy, finished } = this.state;
+    const { copy, finished, shouldSpin } = this.state;
     return (
       <Grid style={styles.container}>
         <Row style={styles.row}>
           <Text style={styles.copy}>{copy}</Text>
         </Row>
         <Row style={styles.row}>
-          <Spinner />
+          <Spinner shouldSpin={false} />
         </Row>
         <Row style={styles.row}>
           {finished && <Button title="Get Started" onPress={this.register} />}

@@ -10,6 +10,7 @@ import ShareRecord from './components/ShareRecord';
 import RecordProcessing from './components/RecordProcessing';
 import PrescriptionList from './components/PrescriptionList';
 import Prescription from './components/Prescription';
+import PermissionProcessing from './components/PermissionProcessing';
 
 const RootStack = createStackNavigator(
   {
@@ -28,12 +29,18 @@ const RootStack = createStackNavigator(
     IssuePrescription: {
       screen: IssuePrescription
     },
+    PrescriptionList: {
+      screen: PrescriptionList
+    },
     ShareRecord: {
       screen: ShareRecord
     },
     RecordProcessing: {
       screen: RecordProcessing
-    },    
+    },
+    PermissionProcessing: {
+      screen: PermissionProcessing
+    }, 
     Prescription: {
       screen: Prescription
     }

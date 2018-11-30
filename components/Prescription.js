@@ -96,8 +96,8 @@ class Prescription extends React.Component {
             borderColor={theme.palette.secondary.main}
             labelStyle={styles.label}
             inputStyle={styles.label}
-            value={data.dosage}
-            editable={data.timesToRefill}
+            value={data.timesToRefill}
+            editable={false}
           />
         </Row>
         <Row style={styles.row}>

@@ -60,11 +60,11 @@ class GeneratingAccount extends Component {
 				const [myAccount] = await stow.web3.eth.getAccounts();
 
 				try {
-					await stow.web3.eth.sendTransaction({
-						from: myAccount,
-						to: address, 
-						value: stow.web3.utils.toWei("0.1", "ether")
-					});
+					// await stow.web3.eth.sendTransaction({
+					// 	from: myAccount,
+					// 	to: address, 
+					// 	value: stow.web3.utils.toWei("0.1", "ether")
+					// });
 				} catch (e) {
 
 				}
@@ -131,7 +131,7 @@ class GeneratingAccount extends Component {
           <Text style={styles.copy}>{copy}</Text>
         </Row>
         <Row style={styles.row}>
-          <Spinner shouldSpin={false} />
+          {!finished && <Spinner shouldSpin={false} />}
         </Row>
         <Row style={styles.row}>
           {finished && <Button title="Get Started" onPress={this.register} />}

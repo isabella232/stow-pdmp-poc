@@ -15,6 +15,7 @@ class AuthContainer extends React.Component {
   }
 
   componentDidMount() {
+    AsyncStorage.removeItem('@Stow:credentials');
     AsyncStorage.getItem("@Stow:credentials").then(credentials => {
       credentials = JSON.parse(credentials)
       this.setState({
@@ -34,6 +35,8 @@ class AuthContainer extends React.Component {
     }
 
     const foundCredentials = params && params.credentials ? params.credentials : this.state.credentials;
+
+
 
     let RoleComponent =
       foundCredentials && foundCredentials.role === "doctor"

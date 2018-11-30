@@ -11,7 +11,6 @@ import {
 import { Col, Row, Grid } from "react-native-easy-grid";
 import theme from "@stowprotocol/brand/theme";
 import Button from "react-native-button";
-import {grantPermission} from './../services/grantPermission'
 
 class PrescriptionList extends React.Component {
   constructor(props) {
@@ -29,14 +28,14 @@ class PrescriptionList extends React.Component {
     let permissions;
     return fetch(
       `https://qastg.api.stow-protocol.com/users/${
-        this.props.credentials.ethereumAddress
+        '0x1B582679c0A0EB83236B2e1D5e0454fc341fAA52'
       }/permissions`
       ).then(response => {
         return response.json()
       })
       .then(allPermissions => {
         permissions = allPermissions.asViewer;
-        let promises = permissions.map(permissions => {
+        let promises = permissions.map(permission => {
             return fetch(
               `https://qastg.api.stow-protocol.com/records/${
                 permission.dataHash
@@ -49,8 +48,12 @@ class PrescriptionList extends React.Component {
         return Promise.all(promises)
       })
       .then(viewerRecords => {
-        return viewerRecords.map((viewerRecord, i) => Object.assign(viewerRecord, {dataUri: permissions[i].dataUril}))
+        return viewerRecords.map((viewerRecord, i) => Object.assign(viewerRecord, {dataUri: permissions[i].dataUri}))
+      }).then((ps) => {
+        const final = Array.from(new Set(ps.map(p => p.dataHash))).map(dataHash => ps.find(p => p.dataHash === dataHash));
+        return final;
       })
+
   }
 
   handlePatient() {
@@ -106,7 +109,7 @@ class PrescriptionList extends React.Component {
             {
               // share function needs to be done Fill here is for pharmacy
             }
-            <Button style={styles.button} onPress={this.share(prescription)}>
+            <Button style={styles.button} onPress={role === "patient" ? this.share(prescription) : () => {}}>
               {role === "patient" ? "Share" : "Fill"}
             </Button>
           </Col>

@@ -22,8 +22,8 @@ class Spinner extends Component {
 		Animated.timing(
 		    spinValue,
 		  {
-		    toValue: 3,
-		    duration: 6000,
+		    toValue: 300,
+		    duration: 600000,
 		    easing: Easing.linear
 		  }
 		).start((o) => {

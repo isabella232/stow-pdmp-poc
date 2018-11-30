@@ -29,7 +29,11 @@ class RecordProcessing extends Component {
 	};
 
 	goBackHome = () => {
-		this.props.navigation.navigate('IssuePrescription');
+		this.props.navigation.navigate('IssuePrescription', {
+			credentials: {
+				role: 'patient'
+			}
+		});
 	}
 
 	uploadPrescription = encrypted => {
@@ -90,7 +94,7 @@ class RecordProcessing extends Component {
 					</Text>
 				</Row>
 				<Row style={styles.row}>
-					<Spinner shouldSpin={true} />
+					{!finished && <Spinner shouldSpin={true} />}
 				</Row>
 				<Row style={styles.row}>
 					{finished && <Button

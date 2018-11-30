@@ -23,7 +23,7 @@ export const grantPermission = async (user, dataHash, ownerEncryptionPrivateKey,
       });
     });
   } catch (e) {
-    throw new Error('Error')
+    throw new Error('IPFS upload failed', dataHash)
   }
 
   // Decrypt the file using the owner's private key
@@ -31,14 +31,14 @@ export const grantPermission = async (user, dataHash, ownerEncryptionPrivateKey,
     const encryptedData = JSON.parse(file);
     decryptedData = await Stow.util.decrypt(ownerEncryptionPrivateKey, encryptedData);
   } catch (e) {
-    throw new Error('Error')
+    throw new Error('Failed to decrypt data')
   }
 
   // Re-encrypt the file using the viewer's public key
   try {
     reencrypted = await Stow.util.encrypt(viewerEncyptionPublicKey, decryptedData);
   } catch (e) {
-    throw new Error('Error')
+    throw new Error('failed to reencrypt data')
   }
 
   // Upload the viewer encrypted file up to a new location in IPFS
@@ -49,16 +49,18 @@ export const grantPermission = async (user, dataHash, ownerEncryptionPrivateKey,
       });
     });
   } catch (e) {
-    throw new Error('Error')
+    throw new Error('failed to reupload')
   }
 
   // Create a new permissions record on the blockchain
   try {
     const { permissions } = await stow.getContractInstances();
-    await permissions.grantAccess(dataHash, viewerEthereumAddress, IPFSDataUri, { from: user });
+    await permissions.grantAccess(dataHash, viewerEthereumAddress.toLowerCase(), IPFSDataUri, { from: user.toLowerCase() });
   } catch (e) {
-    throw new Error('Error')
+    throw new Error(`failed to grant permissions`)
   }
 
   return true;
 }
+
+export default grantPermission;

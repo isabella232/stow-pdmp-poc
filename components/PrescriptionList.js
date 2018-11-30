@@ -11,6 +11,7 @@ import {
 import { Col, Row, Grid } from "react-native-easy-grid";
 import theme from "@stowprotocol/brand/theme";
 import Button from "react-native-button";
+import {grantPermission} from './../services/grantPermission'
 
 class PrescriptionList extends React.Component {
   constructor(props) {

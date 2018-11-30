@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import stowClient from './../Services/stowClient';
+import stowClient from './../services/stow';
 
 class RecordProcessing extends Component {
 	componentDidMount = async () => {

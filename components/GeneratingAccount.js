@@ -85,9 +85,10 @@ class GeneratingAccount extends Component {
       privateEncryptionKey,
       ethereumPrivateKey,
       ethereumAddress
-    }));
+    })).then(() =>  {
+      return this.props.navigation.navigate("AuthContainer")
+    })
 
-    this.props.navigation.navigate("Home");
   };
 
   render = () => {

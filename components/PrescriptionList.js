@@ -27,23 +27,26 @@ class PrescriptionList extends React.Component {
 
   handlePharmacy() {
     let permissions;
-    fetch(
+    return fetch(
       `https://qastg.api.stow-protocol.com/users/${
         this.props.credentials.ethereumAddress
       }/permissions`
-    )
-      .then(response => response.json())
+      ).then(response => {
+        return response.json()
+      })
       .then(allPermissions => {
         permissions = allPermissions.asViewer;
-        return Promise.all(
-          allPermissions.asViewer.map(async permissions => {
+        let promises = permissions.map(permissions => {
             return fetch(
               `https://qastg.api.stow-protocol.com/records/${
                 permission.dataHash
               }`
-            ).then(response => response.json());
+            )
+            .then(response => {
+              return response.json()
+            });
           })
-        )
+        return Promise.all(promises)
       })
       .then(viewerRecords => {
         return viewerRecords.map((viewerRecord, i) => Object.assign(viewerRecord, {dataUri: permissions[i].dataUril}))
@@ -72,7 +75,7 @@ class PrescriptionList extends React.Component {
         });
         this.setState({ prescriptions });
       });
-  }
+    }
 
   share() {}
 

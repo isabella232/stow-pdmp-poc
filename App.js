@@ -27,7 +27,7 @@ const RootStack = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'AuthContainer',
+    initialRouteName: 'Home',
     headerMode: 'none',
   }
 );

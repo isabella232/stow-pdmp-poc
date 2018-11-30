@@ -10,12 +10,13 @@ class AuthContainer extends React.Component {
     super();
     this.state = {
       loading: true,
-      credentials: ""
+      credentials: null
     };
   }
 
   componentDidMount() {
     AsyncStorage.getItem("@Stow:credentials").then(credentials => {
+      credentials = JSON.parse(credentials)
       this.setState({
         credentials,
         loading: false
@@ -31,14 +32,14 @@ class AuthContainer extends React.Component {
     }
 
     let RoleComponent =
-      this.state.credentials.role === "doctor"
+      this.state.credentials && this.state.credentials.role === "doctor"
         ? IssuePrescription
         : PrescriptionList;
 
     return this.state.credentials ? (
       <RoleComponent
         navigation={navigation}
-        credentials={JSON.parse(this.state.credentials)}
+        credentials={this.state.credentials}
       />
     ) : (
       <Register navigation={navigation} />
